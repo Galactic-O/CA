@@ -1,0 +1,233 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 15.04.0 ] */
+
+/* [wxMaxima: comment start ]
+Ejercicio 1
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(f(x),2*sin(x/2)-x+(x-1)^2-1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load(draw);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(explicit(f(x),x,-3,3),
+    xaxis=true, 
+    yaxis=true
+    );
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+pto1:find_root(f(x),x,-1,1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+pto2:find_root(f(x),x,1,3);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+la longitud de la gráfica de una función entre dos puntos de abscisas pto1 y pto2
+es la integral, entre dichos puntos, de la raiz cuadrada de 1 más la derivada de 
+la función al cuadrado
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(df(x),diff(f(x),x,1));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+integrate(sqrt(1+df(x)^2), x, pto1, pto2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Como la integral no la puede hacer de forma exacta buscamos un valor aproximado.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+quad_qags(sqrt(1+df(x)^2), x, pto1, pto2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+longitudaproximada:%[1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+La salida anterior es la longitud buscada.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Ejercicio 2. Como la sucesión de sumas parciales de la serie es creciente (el término
+general es positivo), la aproximación de %pi^2/6 que nos dan las sumas parciales de la 
+serie van a ser siempre por defecto. 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+suma:0.0; 
+n:0;
+while %pi^2/6-suma>10^(-3) do(
+    n:n+1,
+    suma:suma+1/(n)^2
+    );
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+n;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Así que el natural que vamos buscando es 1000.
+¿Comprobamos que no nos hemos equivocado?
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+%pi^2/6-sum(1/i^2,i,1,1000),numer;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+%pi^2/6-sum(1/i^2,i,1,999),numer;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Ejercicio 3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+La elipse centrada en el origen con semiejes 3 y 4 tiene de fórmula x^2/3^2+y^2/4^2=1
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+elip:x^2/3^2+y^2/4^2=1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Un punto de esta elipse,  por ejemplo, sería el [3/sqrt(2),4/sqrt(2)].
+Vamos a hacer un gráfico donde aparezca la elipse y  un rectángulo (por ejemplo el que me 
+da el punto anterior) inscrito en ella. También  vamos a escalar correctamente los ejes 
+para que se observe la forma de la elipse.
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p: [3/sqrt(2),4/sqrt(2)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    implicit(elip,x,-3,3,y,-4,4),
+    transparent=true, 
+    color=red, 
+    rectangle(p,-p),
+    xaxis=true, 
+    yaxis=true, 
+    xrange=[-5,5],
+    yrange=[-5,5],
+    user_preamble="set size ratio 1"
+    );
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Evidentemente la situación es simétrica (respecto a los ejes x e y ) con lo que nos 
+fijaremos en el primer cuadrante. Si llamamos [x,y] al vértice del rectángulo, el área
+sera x*y
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(
+    implicit(elip,x,0,3,y,0,4),
+    transparent=true, 
+    color=red, 
+    rectangle(p,[0,0]),
+    color=green, 
+    point_size=2,
+    point_type=filled_circle, 
+    points([p]),
+    xaxis=true, 
+    yaxis=true, 
+    xrange=[-5,5],
+    yrange=[-5,5],
+    user_preamble="set size ratio 1"
+    );
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+pero el punto [x,y] está en la elipse
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+solve(elip,y);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+La curva de la elipse en el primer cuadrante es la segunda salida anterior
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(g(x),rhs(%[2]));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Y el área que tenemos que buscar que sea máximo va a ser el valor
+ A(x)=x*(4*sqrt(9-x^2))/3, variando x en el intervalo [0,3].
+Evidentemente estamos hablando del área en el primer cuadrante, que es 1/4 del área total.
+Para calcular el máximo de la función actuamos como siempre
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(A(x),x*g(x));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+define(dA(x),diff(A(x),x,1));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve(dA(x)=0,x);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Evidentemente el único valor que nos interesa es el que está en el intervalo [0,3],
+que es 3/sqrt(2). Como además la función A(0)=0 y A(3)=0 y en ]0,3[ es positiva, está 
+obligada a alcanzar su máximo en 3/sqrt(2). En cualquier caso, si no caemos en esto siempre
+podemos recurrir al signo de la segunda derivada. 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(d2A(x),diff(A(x),x,2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+d2A(3/sqrt(2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+que, como es negativo, indica que en 3/sqrt(2) se alcanza el máximo.
+Para calcular el área entre ambos (en el primer cuadrante, claro. En total hay que 
+multiplicar por 4) tendríamos que el área del rectángulo es 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+A(3/sqrt(2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+El área de la elipse es 4*3*%pi=12*%pi, en el primer cuadrante será la 
+cuarta parte de esa cantidad, es decir 3*%pi. Así que la diferencia es 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+3*%pi-6,numer;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Si no recordáramos el área de la elipse siempre podemos calcularla por integración
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+integrate(g(x), x, 0, 3);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
